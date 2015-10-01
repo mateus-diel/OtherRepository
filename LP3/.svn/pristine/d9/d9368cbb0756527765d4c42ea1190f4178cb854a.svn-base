@@ -1,0 +1,990 @@
+package Data;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+import javax.swing.table.AbstractTableModel;
+
+/**
+ * Esta classe possui operações referentes ao banco de dados
+ *
+ * @author Mateus
+ */
+public class ModelTable extends AbstractTableModel {
+
+    private Connection connection;
+    private Statement statement;
+    private ResultSet resultSet;
+    private ResultSetMetaData metaData;
+    private int numberOfRows;
+    private boolean connectedToDatabase = false;
+    private PreparedStatement prepare;
+    private PreparedStatement prepCliName;
+    private PreparedStatement prepCliCod;
+    private PreparedStatement prepProName;
+    private PreparedStatement prepProCod;
+    private PreparedStatement prepVenCod;
+    private PreparedStatement prepVenName;
+    private PreparedStatement prepUpdateCliRG;
+    private PreparedStatement prepUpdateCliNome;
+    private PreparedStatement prepUpdateCliTelefone;
+    private PreparedStatement prepUpdateCPFCli;
+    private PreparedStatement inserirCliente;
+    private PreparedStatement excluirCliente;
+    private PreparedStatement prepUpdateProName;
+    private PreparedStatement prepUpdateProPrice;
+    private PreparedStatement inserirProduto;
+    private PreparedStatement updateVendedorNome;
+    private PreparedStatement updateVendedorTelefone;
+    private PreparedStatement updateVendedorSalario;
+    private PreparedStatement insertVendedor;
+    private PreparedStatement excluirVendedor;
+    private PreparedStatement excluirProduto;
+    private PreparedStatement showNF;
+
+    /**
+     * Recebe tres strings, uma url um usuario e uma senha, cria uma conexão com
+     * os parametros recebidos e neste mesmo construtor já é executado uma
+     * consulta
+     *
+     * @param url
+     * @param user
+     * @param password
+     * @param query
+     * @throws SQLException
+     */
+    public ModelTable(String url, String user, String password, String query) throws SQLException {
+        connection = DriverManager.getConnection(url, user, password);
+        statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        connectedToDatabase = true;
+        setQuery(query);
+        prStatement();
+    }
+
+    /**
+     * Recebe tres strings, uma url um usuario e uma senha, cria uma conexão com
+     * os parametros recebidos
+     *
+     * @param url
+     * @param user
+     * @param password
+     * @throws SQLException
+     */
+    public ModelTable(String url, String user, String password) throws SQLException {
+        connection = DriverManager.getConnection(url, user, password);
+        statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        connectedToDatabase = true;
+    }
+
+    @Override
+    public Class getColumnClass(int column) throws IllegalStateException {
+        if (!connectedToDatabase) {
+            System.out.println("Not Connected to Database");
+        } else {
+            try {
+                String className = metaData.getColumnClassName(column + 1);
+                return Class.forName(className);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return Object.class;
+    }
+
+    @Override
+    public int getColumnCount() throws IllegalStateException {
+        if (!connectedToDatabase) {
+            System.out.println("Not Connected to Database");
+        } else {
+            try {
+                return metaData.getColumnCount();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public String getColumnName(int column) throws IllegalStateException {
+        if (!connectedToDatabase) {
+            System.out.println("Not Connected to Database");
+        } else {
+            try {
+                return metaData.getColumnName(column + 1);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return "";
+    }
+
+    @Override
+    public int getRowCount() throws IllegalStateException {
+        return numberOfRows;
+    }
+
+    @Override
+    public Object getValueAt(int row, int column) throws IllegalStateException {
+        if (!connectedToDatabase) {
+            System.out.println("Not Connected to Database");
+        } else {
+            try {
+                resultSet.absolute(row + 1);
+                return resultSet.getObject(column + 1);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return "";
+    }
+
+    /**
+     * Este método fecha os objetos
+     */
+    public void disconnectFromDatabase() {
+        if (connectedToDatabase) {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            } finally {
+                connectedToDatabase = false;
+            }
+        }
+    }
+
+    /**
+     * Faz uma consulta no banco de dados através de uma string que contém a
+     * linha de código
+     *
+     * @param query
+     * @throws IllegalStateException
+     * @throws SQLException
+     */
+    public void setQuery(String query) throws IllegalStateException, SQLException {
+        resultSet = statement.executeQuery(query);
+        metaData = resultSet.getMetaData();
+        resultSet.last();
+        numberOfRows = resultSet.getRow();
+        fireTableStructureChanged();
+    }
+
+    /**
+     * PreparedStatements
+     *
+     * @throws SQLException
+     */
+    public void prStatement() throws SQLException {
+        prepCliCod = connection.prepareStatement("SELECT NOME,TELEFONE,CPF,RG FROM CLIENTE WHERE CPF = ?");
+        prepCliName = connection.prepareStatement("SELECT NOME,TELEFONE,CPF,RG FROM CLIENTE WHERE NOME LIKE ?");
+        prepProName = connection.prepareStatement("SELECT NOME,VALOR,CODP FROM PRODUTO WHERE NOME LIKE ?");
+        prepProCod = connection.prepareStatement("SELECT NOME,VALOR,CODP FROM PRODUTO WHERE CODP = ?");
+        prepVenCod = connection.prepareStatement("SELECT NOME,TELEFONE,CODV FROM VENDEDOR WHERE CODV = ?");
+        prepVenName = connection.prepareStatement("SELECT NOME,TELEFONE,CODV FROM VENDEDOR WHERE NOME LIKE ?");
+
+        showNF = connection.prepareStatement("select v.notafiscal, c.cpf, c.nome, ve.codv, ve.nome, pro.codp, produtos.nome\n"
+                + " from vendas v,\n"
+                + "prodvendas pro,\n"
+                + "produto produtos,\n"
+                + "cliente c,\n"
+                + "vendedor ve \n"
+                + "where v.cpf = c.cpf and v.codv = ve.codv and v.notafiscal = ? and \n"
+                + "pro.notafiscal=v.notafiscal and produtos.codp = pro.codp");
+    }
+
+    /**
+     * PreparedStatement dos clientes
+     *
+     * @throws java.sql.SQLException
+     */
+    public void preparedStatesCliente() throws SQLException {
+        prepUpdateCliRG = connection.prepareStatement("update cliente set  RG = ? where CPF = ?");
+        prepUpdateCliNome = connection.prepareStatement("update cliente set  NOME = ? where CPF = ?");
+        prepUpdateCliTelefone = connection.prepareStatement("update cliente set  TELEFONE = ? where CPF = ?");
+        inserirCliente = connection.prepareStatement("insert into Cliente values (?,?,?,?)");
+        excluirCliente = connection.prepareStatement("delete from cliente where cpf = ? and rg = ?");
+        prepUpdateCPFCli = connection.prepareStatement("update cliente set cpf = ? where cpf = ? and rg = ?");
+    }
+
+    /**
+     * PreparedStatement dos produtos
+     *
+     * @throws SQLException
+     */
+    public void preparedStatesProdutos() throws SQLException {
+        prepUpdateProName = connection.prepareStatement("UPDATE PRODUTO SET NOME = ? WHERE CODP = ?");
+        prepUpdateProPrice = connection.prepareStatement("UPDATE PRODUTO SET VALOR = ? WHERE CODP = ?");
+        inserirProduto = connection.prepareStatement("insert into Produto values (?,?,?)");
+        excluirProduto = connection.prepareStatement("delete from produto where codp=?");
+    }
+
+    /**
+     * PreparedStatement dos Vendedores
+     *
+     * @throws SQLException
+     */
+    public void preparedStatesVendedor() throws SQLException {
+        updateVendedorNome = connection.prepareStatement("update vendedor set nome = ? where codv = ?");
+        updateVendedorTelefone = connection.prepareStatement("update vendedor set telefone = ? where codv = ?");
+        updateVendedorSalario = connection.prepareStatement("update vendedor set salario = ? where codv = ?");
+        insertVendedor = connection.prepareStatement("insert into Vendedor values (?,?,?,?)");
+        excluirVendedor = connection.prepareStatement("delete from vendedor where codv = ?");
+    }
+
+    /**
+     * Metodos para pesquisa
+     *
+     * @param i
+     * @param j
+     * @throws java.sql.SQLException
+     */
+    public void prepStatement(int i, int j) throws SQLException {
+        prepare = connection.prepareStatement("SELECT * FROM CLIENTE WHERE CDCLI = ? AND CDTIPOCLI = ?");
+        prepare.setInt(1, i);
+        prepare.setInt(2, j);
+        resultSet = prepare.executeQuery();
+        metaData = resultSet.getMetaData();
+        resultSet.last();
+        numberOfRows = resultSet.getRow();
+        fireTableStructureChanged();
+    }
+
+    /**
+     * Busca um cliente pelo seu nome ou parte do seu nome
+     *
+     * @param n
+     * @throws SQLException
+     */
+    public void searchCliName(String n) throws SQLException {
+        String name = ("%" + n + "%");
+        prepCliName.setString(1, name);
+        resultSet = prepCliName.executeQuery();
+        metaData = resultSet.getMetaData();
+        resultSet.last();
+        numberOfRows = resultSet.getRow();
+        fireTableStructureChanged();
+    }
+
+    /**
+     * Busca um cliente pelo seu código
+     *
+     * @param cod
+     * @throws SQLException
+     */
+    public void searchCliCod(String cod) throws SQLException {
+        int co = Integer.parseInt(cod);
+        prepCliCod.setInt(1, co);
+        resultSet = prepCliCod.executeQuery();
+        metaData = resultSet.getMetaData();
+        resultSet.last();
+        numberOfRows = resultSet.getRow();
+        fireTableStructureChanged();
+    }
+
+    /**
+     * Busca uma nota fiscal pelo seu codigo
+     *
+     * @param nf
+     */
+    public void showNF(String nf) {
+        try {
+            int nfint = Integer.parseInt(nf);
+            showNF.setInt(1, nfint);
+            resultSet = showNF.executeQuery();
+            metaData = resultSet.getMetaData();
+            resultSet.last();
+            numberOfRows = resultSet.getRow();
+            fireTableStructureChanged();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Ops! Algo deu errado \n Verifique o campos e tente novamente", "Message", 2);
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Busca um produto pelo seu nome ou parte de seu nome
+     *
+     * @param na
+     * @throws SQLException
+     */
+    public void searchProName(String na) throws SQLException {
+        String name = ("%" + na + "%");
+        prepProName.setString(1, name);
+        resultSet = prepProName.executeQuery();
+        metaData = resultSet.getMetaData();
+        resultSet.last();
+        numberOfRows = resultSet.getRow();
+        fireTableStructureChanged();
+    }
+
+    /**
+     * Busca um produto pelo seu código
+     *
+     * @param cod
+     * @throws SQLException
+     */
+    public void searchProCod(String cod) throws SQLException {
+        int codigo = Integer.parseInt(cod);
+        prepProCod.setInt(1, codigo);
+        resultSet = prepProCod.executeQuery();
+        metaData = resultSet.getMetaData();
+        resultSet.last();
+        numberOfRows = resultSet.getRow();
+        fireTableStructureChanged();
+    }
+
+    /**
+     * Este metodo é utilizado para retornar o tamanho de linhas que a tabela de
+     * usuários contém
+     *
+     * @return
+     */
+    public int getRowsOfUsers() {
+        try {
+            resultSet = statement.executeQuery("select * from usuarios");
+            resultSet.last();
+            return resultSet.getRow();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * Este metodo é utilizado para retornar a senha de um determinado usuáriom,
+     * usa-se o login do usuário para localizar a senha
+     *
+     * @param login
+     * @return
+     * @throws SQLException
+     */
+    public String getPassword(String login) throws SQLException {
+        PreparedStatement ps;
+        ps = connection.prepareStatement("select password from usuarios where convert(login, binary) = ?");
+        ps.setString(1, login);
+        resultSet = ps.executeQuery();
+        resultSet.next();
+        String codigo = (resultSet.getString("password"));
+        return codigo;
+    }
+
+    /**
+     * Busca um vendedor pelo seu nome ou parte de seu nome
+     *
+     * @param name
+     * @throws SQLException
+     */
+    public void searchVendedorName(String name) throws SQLException {
+        String nameVen = ("%" + name + "%");
+        prepVenName.setString(1, nameVen);
+        resultSet = prepVenName.executeQuery();
+        metaData = resultSet.getMetaData();
+        resultSet.last();
+        numberOfRows = resultSet.getRow();
+        fireTableStructureChanged();
+    }
+
+    /**
+     * Busca um vendedor pelo seu código
+     *
+     * @param cod
+     * @throws SQLException
+     */
+    public void searchVendedorCod(String cod) throws SQLException {
+        int codigo = Integer.parseInt(cod);
+        prepVenCod.setInt(1, codigo);
+        resultSet = prepVenCod.executeQuery();
+        metaData = resultSet.getMetaData();
+        resultSet.last();
+        numberOfRows = resultSet.getRow();
+        fireTableStructureChanged();
+    }
+
+    /**
+     * Métodos para atualização de dados
+     */
+    /**
+     * Atualiza o RG de um cliente
+     *
+     * @param rg
+     * @param CPF
+     */
+    public void updateClienteRG(String rg, String CPF) {
+        try {
+            connection.setAutoCommit(false);
+            int cdCPF = Integer.parseInt(CPF);
+            int cdRG = Integer.parseInt(rg);
+            prepUpdateCliRG.setInt(2, cdCPF);
+            prepUpdateCliRG.setInt(1, cdRG);
+            prepUpdateCliRG.executeUpdate();
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "RG alterado com sucesso!");
+
+        } catch (Exception ex) {
+            try {
+                JOptionPane.showMessageDialog(null, "Ops! Algo deu errado \n Verifique os campos e tente novamente", "Message", 2);
+                connection.rollback();
+            } catch (SQLException ex1) {
+                ex1.printStackTrace();
+            }
+            ex.printStackTrace();
+        }
+        try {
+            connection.setAutoCommit(true);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Atualiza o nome de um cliente
+     *
+     * @param nome
+     * @param CPF
+     */
+    public void updateClienteNome(String nome, String CPF) {
+        try {
+            connection.setAutoCommit(false);
+            int cdCPF = Integer.parseInt(CPF);
+            prepUpdateCliNome.setInt(2, cdCPF);
+            prepUpdateCliNome.setString(1, nome);
+            prepUpdateCliNome.executeUpdate();
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "Nome alterado com sucesso!");
+        } catch (Exception ex) {
+            try {
+                JOptionPane.showMessageDialog(null, "Ops! Algo deu errado \n Verifique os campos e tente novamente", "Message", 2);
+                connection.rollback();
+            } catch (SQLException ex1) {
+                ex1.printStackTrace();
+            }
+            ex.printStackTrace();
+        }
+        try {
+            connection.setAutoCommit(true);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Insere um novo usuário no banco de dados
+     *
+     * @param cpf
+     * @param login
+     * @param pw
+     */
+    public void inserirUser(String cpf, String login, String pw) {
+        try {
+            PreparedStatement ps;
+            ps = connection.prepareStatement("select login from usuarios where convert(login, binary) = ?");
+            ps.setString(1, login);
+            resultSet = ps.executeQuery();
+            resultSet.next();
+            String log = (resultSet.getString("login"));
+            if (log.equals(login)) {
+                JOptionPane.showMessageDialog(null, "Ops! Este usuário já existe!", "Message", 2);
+            }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+            if(login.length() !=0){
+            try {
+                connection.setAutoCommit(false);
+                PreparedStatement insert = connection.prepareStatement("insert into usuarios "
+                        + "values (?,?,?)");
+                int cdCPF = Integer.parseInt(cpf);
+                insert.setInt(1, cdCPF);
+                insert.setString(2, login);
+                insert.setString(3, pw);
+                insert.executeUpdate();
+                connection.commit();
+                JOptionPane.showMessageDialog(null, "Usuário inserido com sucesso!");
+            } catch (Exception ex) {
+                try {
+                    JOptionPane.showMessageDialog(null, "Ops! Algo deu errado \n Verifique os campos e tente novamente", "Message", 2);
+                    connection.rollback();
+                } catch (SQLException ex1) {
+                    ex1.printStackTrace();
+                }
+                ex.printStackTrace();
+            }
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        }
+    }
+
+    /**
+     * Exclui um usuário atraves do cpf e login
+     *
+     * @param cpf
+     * @param login
+     */
+    public void excluirUser(String cpf, String login) {
+        try {
+            connection.setAutoCommit(false);
+            PreparedStatement insert = connection.prepareStatement("delete from usuarios "
+                    + "where cpf = ? and login = ?");
+            int cdCPF = Integer.parseInt(cpf);
+            insert.setInt(1, cdCPF);
+            insert.setString(2, login);
+            insert.executeUpdate();
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "Usuário excluido com sucesso!");
+        } catch (Exception ex) {
+            try {
+                JOptionPane.showMessageDialog(null, "Ops! Algo deu errado \n Verifique os campos e tente novamente", "Message", 2);
+                connection.rollback();
+            } catch (SQLException ex1) {
+                ex1.printStackTrace();
+            }
+            ex.printStackTrace();
+        }
+        try {
+            connection.setAutoCommit(true);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Exclui um produto através de seu código
+     *
+     * @param cod
+     */
+    public void excluirProduto(String cod) {
+        try {
+            connection.setAutoCommit(false);
+            int cdCod = Integer.parseInt(cod);
+            excluirProduto.setInt(1, cdCod);
+            excluirProduto.executeUpdate();
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "Produto excluido com sucesso!");
+        } catch (Exception ex) {
+            try {
+                JOptionPane.showMessageDialog(null, "Ops! Algo deu errado \n Verifique os campos e tente novamente", "Message", 2);
+                connection.rollback();
+            } catch (SQLException ex1) {
+                ex1.printStackTrace();
+            }
+            ex.printStackTrace();
+        }
+        try {
+            connection.setAutoCommit(true);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Exclui um vendedor através de seu código
+     *
+     * @param cod
+     */
+    public void excluirVendedor(String cod) {
+        try {
+            connection.setAutoCommit(false);
+            int cdCod = Integer.parseInt(cod);
+            excluirVendedor.setInt(1, cdCod);
+            excluirVendedor.executeUpdate();
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "Vendedor excluido com sucesso!");
+        } catch (Exception ex) {
+            try {
+                JOptionPane.showMessageDialog(null, "Ops! Algo deu errado \n Verifique os campos e tente novamente", "Message", 2);
+                connection.rollback();
+            } catch (SQLException ex1) {
+                ex1.printStackTrace();
+            }
+            ex.printStackTrace();
+        }
+        try {
+            connection.setAutoCommit(true);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Insere um novo vendedor na tabela
+     *
+     * @param nome
+     * @param telefone
+     * @param salario
+     * @param cod
+     */
+    public void insertVendedor(String nome, String telefone, String salario, String cod) {
+        try {
+            connection.setAutoCommit(false);
+            int cdCod = Integer.parseInt(cod);
+            insertVendedor.setInt(1, (cdCod));
+            insertVendedor.setString(2, salario);
+            insertVendedor.setString(3, telefone);
+            insertVendedor.setString(4, "Unknow");
+            insertVendedor.executeUpdate();
+            PreparedStatement up = connection.prepareStatement("update vendedor set nome = ? where codv = ?");
+            up.setString(1, nome);
+            up.setInt(2, (cdCod));
+            up.executeUpdate();
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "Vendedor inserido com sucesso!");
+        } catch (Exception ex) {
+            try {
+                JOptionPane.showMessageDialog(null, "Ops! Algo deu errado \n Verifique os campos e tente novamente", "Message", 2);
+                connection.rollback();
+            } catch (SQLException ex1) {
+                ex1.printStackTrace();
+            }
+            ex.printStackTrace();
+        }
+        try {
+            connection.setAutoCommit(true);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Atualiza o salário de um determinado vendedor
+     *
+     * @param cod
+     * @param salario
+     */
+    public void updateVendedorSalario(String cod, String salario) {
+        try {
+            connection.setAutoCommit(false);
+            int cdCod = Integer.parseInt(cod);
+            updateVendedorSalario.setString(1, salario);
+            updateVendedorSalario.setInt(2, cdCod);
+            updateVendedorSalario.executeUpdate();
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "Salario atualizado com sucesso!");
+        } catch (Exception ex) {
+            try {
+                JOptionPane.showMessageDialog(null, "Ops! Algo deu errado \n Verifique os campos e tente novamente", "Message", 2);
+                connection.rollback();
+            } catch (SQLException ex1) {
+                ex1.printStackTrace();
+            }
+            ex.printStackTrace();
+        }
+        try {
+            connection.setAutoCommit(true);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Atualiza o telefone de um vendedor
+     *
+     * @param cod
+     * @param telefone
+     */
+    public void updateVendedorTelefone(String cod, String telefone) {
+        try {
+            connection.setAutoCommit(false);
+            int cdCod = Integer.parseInt(cod);
+            updateVendedorTelefone.setString(1, telefone);
+            updateVendedorTelefone.setInt(2, cdCod);
+            updateVendedorTelefone.executeUpdate();
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "Telefone atualizado com sucesso!");
+        } catch (Exception ex) {
+            try {
+                JOptionPane.showMessageDialog(null, "Ops! Algo deu errado \n Verifique os campos e tente novamente", "Message", 2);
+                connection.rollback();
+            } catch (SQLException ex1) {
+                ex1.printStackTrace();
+            }
+            ex.printStackTrace();
+        }
+        try {
+            connection.setAutoCommit(true);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Atualiza o nome de um vendedor
+     *
+     * @param cod
+     * @param nome
+     */
+    public void updateVendedorNome(String cod, String nome) {
+        try {
+            connection.setAutoCommit(false);
+            int cdCod = Integer.parseInt(cod);
+            updateVendedorNome.setString(1, nome);
+            updateVendedorNome.setInt(2, cdCod);
+            updateVendedorNome.executeUpdate();
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "Nome atualizado com sucesso!");
+        } catch (Exception ex) {
+            try {
+                JOptionPane.showMessageDialog(null, "Ops! Algo deu errado \n Verifique os campos e tente novamente", "Message", 2);
+                connection.rollback();
+            } catch (SQLException ex1) {
+                ex1.printStackTrace();
+            }
+            ex.printStackTrace();
+        }
+        try {
+            connection.setAutoCommit(true);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Insere um novo produto na tabela
+     *
+     * @param cod
+     * @param preco
+     * @param nome
+     */
+    public void inserirProduto(String cod, String preco, String nome) {
+        try {
+            connection.setAutoCommit(false);
+            int cdCod = Integer.parseInt(cod);
+            inserirProduto.setInt(1, cdCod);
+            inserirProduto.setString(2, preco);
+            inserirProduto.setString(3, "Unknow");
+            inserirProduto.executeUpdate();
+            PreparedStatement up = connection.prepareStatement("update produto set nome = ? where codp = ?");
+            up.setString(1, nome);
+            up.setInt(2, cdCod);
+            up.executeUpdate();
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "Produto inserido com sucesso!");
+        } catch (Exception ex) {
+            try {
+                JOptionPane.showMessageDialog(null, "Ops! Algo deu errado \n Verifique os campos e tente novamente", "Message", 2);
+                connection.rollback();
+            } catch (SQLException ex1) {
+                ex1.printStackTrace();
+            }
+            ex.printStackTrace();
+        }
+        try {
+            connection.setAutoCommit(true);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Atualiza o preço de um produto
+     *
+     * @param cod
+     * @param price
+     */
+    public void updateProdutoPrice(String cod, String price) {
+        try {
+            connection.setAutoCommit(false);
+            int cdCod = Integer.parseInt(cod);
+            prepUpdateProPrice.setInt(2, cdCod);
+            prepUpdateProPrice.setString(1, price);
+            prepUpdateProPrice.executeUpdate();
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "Nome alterado com sucesso!");
+        } catch (Exception ex) {
+            try {
+                JOptionPane.showMessageDialog(null, "Ops! Algo deu errado \n Verifique os campos e tente novamente", "Message", 2);
+                connection.rollback();
+            } catch (SQLException ex1) {
+                ex1.printStackTrace();
+            }
+            ex.printStackTrace();
+        }
+        try {
+            connection.setAutoCommit(true);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Atualiza o CPF de um cliente
+     *
+     * @param rg
+     * @param cpf
+     * @param newCPF
+     */
+    public void updateCPFCliente(String rg, String cpf, String newCPF) {
+        try {
+            connection.setAutoCommit(false);
+            int cliRG = Integer.parseInt(rg);
+            int cliCPF = Integer.parseInt(cpf);
+            int cliNewCPF = Integer.parseInt(newCPF);
+            prepUpdateCPFCli.setInt(1, cliNewCPF);
+            prepUpdateCPFCli.setInt(2, cliCPF);
+            prepUpdateCPFCli.setInt(3, cliRG);
+            prepUpdateCPFCli.executeUpdate();
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "CPF alterado com sucesso!");
+        } catch (Exception ex) {
+            try {
+                JOptionPane.showMessageDialog(null, "Ops! Algo deu errado \n Verifique os campos e tente novamente", "Message", 2);
+                connection.rollback();
+            } catch (SQLException ex1) {
+                ex1.printStackTrace();
+            }
+            ex.printStackTrace();
+        }
+        try {
+            connection.setAutoCommit(true);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Atualiza o nome de um produto
+     *
+     * @param cod
+     * @param nome
+     */
+    public void updateProdutoNome(String cod, String nome) {
+        try {
+            connection.setAutoCommit(false);
+            int cdCod = Integer.parseInt(cod);
+            prepUpdateProName.setInt(2, cdCod);
+            prepUpdateProName.setString(1, nome);
+            prepUpdateProName.executeUpdate();
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "Nome alterado com sucesso!");
+        } catch (Exception ex) {
+            try {
+                JOptionPane.showMessageDialog(null, "Ops! Algo deu errado \n Verifique os campos e tente novamente", "Message", 2);
+                connection.rollback();
+            } catch (SQLException ex1) {
+                ex1.printStackTrace();
+            }
+            ex.printStackTrace();
+        }
+        try {
+            connection.setAutoCommit(true);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Atualiza o telefone de um cliente
+     *
+     * @param telefone
+     * @param CPF
+     */
+    public void updateClienteTelefone(String telefone, String CPF) {
+        try {
+            connection.setAutoCommit(false);
+            int cdCPF = Integer.parseInt(CPF);
+            prepUpdateCliTelefone.setInt(2, cdCPF);
+            prepUpdateCliTelefone.setString(1, telefone);
+            prepUpdateCliTelefone.executeUpdate();
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "Telefone alterado com sucesso!");
+        } catch (Exception ex) {
+            try {
+                JOptionPane.showMessageDialog(null, "Ops! Algo deu errado \n Verifique os campos e tente novamente", "Message", 2);
+                connection.rollback();
+            } catch (SQLException ex1) {
+                ex1.printStackTrace();
+            }
+            ex.printStackTrace();
+        }
+        try {
+            connection.setAutoCommit(true);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Exclui um cliente da tabela através de seu cpf e rg
+     *
+     * @param cpf
+     * @param RG
+     */
+    public void excluirCliente(String cpf, String RG) {
+        try {
+            connection.setAutoCommit(false);
+            int cdCPF = Integer.parseInt(cpf);
+            int cdRG = Integer.parseInt(RG);
+            excluirCliente.setInt(1, cdCPF);
+            excluirCliente.setInt(2, cdRG);
+            excluirCliente.executeUpdate();
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "Cliente excluido com sucesso!");
+        } catch (Exception ex) {
+            try {
+                JOptionPane.showMessageDialog(null, "Ops! Algo deu errado \n Verifique os campos e tente novamente", "Message", 2);
+                connection.rollback();
+            } catch (SQLException ex1) {
+                ex1.printStackTrace();
+            }
+            ex.printStackTrace();
+        }
+        try {
+            connection.setAutoCommit(true);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * Insere um novo cliente na tabela
+     *
+     * @param cpf
+     * @param rg
+     * @param telefone
+     * @param nome
+     */
+    public void inserirCliente(String cpf, String rg, String telefone, String nome) {
+        try {
+            connection.setAutoCommit(false);
+            int cdCPF = Integer.parseInt(cpf);
+            int cdRG = Integer.parseInt(rg);
+            inserirCliente.setInt(1, cdCPF);
+            inserirCliente.setInt(2, cdRG);
+            inserirCliente.setString(3, telefone);
+            inserirCliente.setString(4, "Unknow");
+            inserirCliente.executeUpdate();
+            PreparedStatement up = connection.prepareStatement("update cliente set nome = ? where cpf = ?");
+            up.setString(1, nome);
+            up.setInt(2, (cdCPF));
+            up.executeUpdate();
+            connection.commit();
+            JOptionPane.showMessageDialog(null, "Cliente inserido com sucesso!");
+        } catch (SQLException ex) {
+            try {
+                if(ex.getErrorCode()==1062){
+                JOptionPane.showMessageDialog(null, "Ops! Este CPF já existe no banco de dados\nEste cliente já está cadastrado!", "Message", 2);
+                }
+                connection.rollback();
+            } catch (SQLException ex1) {
+                ex1.printStackTrace();
+            }
+            ex.printStackTrace();
+        }
+        try {
+            connection.setAutoCommit(true);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+}
