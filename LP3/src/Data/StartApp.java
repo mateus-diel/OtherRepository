@@ -19,6 +19,5 @@ public class StartApp {
     public static void main(String[] args) throws SQLException {
         LoginForm l = new LoginForm();
         l.setVisible(true);
-        //seta a visibilidade
     }
 }
