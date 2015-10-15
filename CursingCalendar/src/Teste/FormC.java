@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import javax.swing.JFrame;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
