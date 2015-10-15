@@ -164,9 +164,9 @@ public class ConnectClass extends AbstractTableModel {
         } catch (SQLException ex) {
             ex.printStackTrace();
             if (ex.getErrorCode() == 1062) {
-                JOptionPane.showMessageDialog(null, "Está data já existe!", "Mensagem", 2);
+                JOptionPane.showMessageDialog(null, "Está data já está adicionada!", "Mensagem", 0);
             } else {
-                JOptionPane.showMessageDialog(null, "Ops! Algo deu errado!", "Mensagem", 2);
+                JOptionPane.showMessageDialog(null, "Ops! Algo deu errado!", "Mensagem", 0);
             }
         }
     }
@@ -177,10 +177,10 @@ public class ConnectClass extends AbstractTableModel {
             String z = "truncate table curseddays";
             s = connection.prepareStatement(z);
             s.execute();
-            JOptionPane.showMessageDialog(null, "Tudo foi deletado!", "Mensagem", 2);
+            JOptionPane.showMessageDialog(null, "Tudo foi deletado!", "Mensagem", 1);
         } catch (SQLException ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Ops! Algo deu errado!", "Mensagem", 2);
+            JOptionPane.showMessageDialog(null, "Ops! Algo deu errado!", "Mensagem", 0);
         }
     }
 
@@ -188,10 +188,10 @@ public class ConnectClass extends AbstractTableModel {
         try {
             deleteDay.setInt(1, Integer.parseInt(day));
             deleteDay.execute();
-            JOptionPane.showMessageDialog(null, "Day Deleted!", "Mensagem", 2);
+            JOptionPane.showMessageDialog(null, "Day Deleted!", "Mensagem", 1);
         } catch (SQLException ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Ops! Algo deu errado!", "Mensagem", 2);
+            JOptionPane.showMessageDialog(null, "Ops! Algo deu errado!", "Mensagem", 0);
         }
     }
 }

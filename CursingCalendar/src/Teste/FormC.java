@@ -20,7 +20,7 @@ import java.util.Locale;
  */
 public class FormC extends javax.swing.JFrame {
 
-    ConnectClass data,model;
+    ConnectClass data, model;
 
     /**
      * Creates new form FormC
@@ -34,8 +34,16 @@ public class FormC extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Erro");
         }
         initComponents();
-        jtNumberOfDays.setText(data.numberOfDays());
-        jtfDay.requestFocus();
+        try {
+            jtNumberOfDays.setText(data.numberOfDays());
+            jtfDay.requestFocus();
+            jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
+            jTable1.getColumnModel().getColumn(1).setPreferredWidth(400);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Não foi possivel "
+                    + "reposicionar as colunas.");
+        }
     }
 
     /**
@@ -111,7 +119,7 @@ public class FormC extends javax.swing.JFrame {
 
         jlDay.setText("Day:");
 
-        jbReload.setText("Reload");
+        jbReload.setText("Calc");
         jbReload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbReloadActionPerformed(evt);
@@ -197,23 +205,34 @@ public class FormC extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbAddDayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddDayActionPerformed
-        if (jtComentArea.getText().length() == 0 && jtfDay.getText().length()!=0 ) {
-            data.addDayComentary(jtfDay.getText(), getMonthData());
-            jtfDay.setText("");
-            jtNumberOfDays.setText(data.numberOfDays());
-        } else if (jtComentArea.getText().length() != 0 && jtfDay.getText().length() == 0 ) {
-            data.addDayComentary(getDayData(), getMonthData() + " " + jtComentArea.getText());
-            jtComentArea.setText("");
-        }else if (jtComentArea.getText().length()==0 && jtfDay.getText().length() == 0){
-             data.addDayComentary(getDayData(), getMonthData());
-            jtNumberOfDays.setText(data.numberOfDays());                    
-        } else {
-            jtNumberOfDays.setText(data.numberOfDays());
-            JOptionPane.showMessageDialog(null, "Algo deu errado!", "Mensagem", 1);
-        }
-        try{
-        model.setQuery("Select * from curseddays");
-        }catch (Exception ex){
+        try {
+            String z = jtComentArea.getText().toUpperCase();
+            if (z.contains("JANEIRO") || z.contains("FEVEREIRO") || z.contains("MARÇO")
+                    || z.contains("ABRIL") || z.contains("MAIO") || z.contains("JUNHO")
+                    || z.contains("JULHO") || z.contains("AGOSTO") || z.contains("SETEMBRO")
+                    || z.contains("OUTUBRO") || z.contains("NOVEMBRO") || z.contains("DEZEMBRO")) {
+                data.addDayComentary(jtfDay.getText(), jtComentArea.getText());
+                jtNumberOfDays.setText(data.numberOfDays());
+                jtfDay.setText("");
+            } else {
+                if (jtComentArea.getText().length() == 0 && jtfDay.getText().length() != 0) {
+                    data.addDayComentary(jtfDay.getText(), getMonthData());
+                    jtfDay.setText("");
+                    jtNumberOfDays.setText(data.numberOfDays());
+                } else if (jtComentArea.getText().length() != 0 && jtfDay.getText().length() == 0) {
+                    data.addDayComentary(getDayData(), getMonthData() + " " + jtComentArea.getText());
+                    jtComentArea.setText("");
+                } else if (jtComentArea.getText().length() == 0 && jtfDay.getText().length() == 0) {
+                    data.addDayComentary(getDayData(), getMonthData());
+                    jtNumberOfDays.setText(data.numberOfDays());
+                } else {
+                    jtNumberOfDays.setText(data.numberOfDays());
+                    JOptionPane.showMessageDialog(null, "Algo deu errado!", "Mensagem", 1);
+                }
+            }
+            model.setQuery("Select * from curseddays");
+            setPreferredWidth();
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_jbAddDayActionPerformed
@@ -225,8 +244,8 @@ public class FormC extends javax.swing.JFrame {
         String[] doc = formatador.format(calendar.getTime()).split(" ");
         return doc[0];
     }
-    
-    public String getMonthData(){
+
+    public String getMonthData() {
         Locale locale = new Locale("pt", "BR");
         GregorianCalendar calendar = new GregorianCalendar();
         SimpleDateFormat formatador = new SimpleDateFormat("dd' de 'MMMMM' de 'yyyy' - 'HH':'mm'h'", locale);
@@ -242,9 +261,10 @@ public class FormC extends javax.swing.JFrame {
         } else {
             JOptionPane.showMessageDialog(null, "Please, insert a day!", "Mensagem", 2);
         }
-        try{
-        model.setQuery("Select * from curseddays");
-        }catch (Exception ex){
+        try {
+            model.setQuery("Select * from curseddays");
+            setPreferredWidth();
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_jbDeleteDayActionPerformed
@@ -257,19 +277,22 @@ public class FormC extends javax.swing.JFrame {
             data.deleteAllDays();
             jtNumberOfDays.setText(data.numberOfDays());
         }
-        try{
-        model.setQuery("Select * from curseddays");
-        }catch (Exception ex){
+        try {
+            model.setQuery("Select * from curseddays");
+            setPreferredWidth();
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_jbDeleteAllActionPerformed
 
+    public void setPreferredWidth() {
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
+        jTable1.getColumnModel().getColumn(1).setPreferredWidth(400);
+    }
+
     private void jbReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbReloadActionPerformed
-        try {
-            model.setQuery("Select * from curseddays");
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
+        Calculadora tela = new Calculadora();
+        tela.setVisible(true);
     }//GEN-LAST:event_jbReloadActionPerformed
 
     private void jbExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbExitActionPerformed
