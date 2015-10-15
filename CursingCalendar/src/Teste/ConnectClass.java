@@ -1,6 +1,5 @@
 package Teste;
 
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -29,7 +28,6 @@ public class ConnectClass extends AbstractTableModel {
     private int numberOfRows;
     private boolean connectedToDatabase;
     private PreparedStatement deleteDay;
-    private PreparedStatement addDay;
     private PreparedStatement deleteAllDay;
     private PreparedStatement addDayWithComentary;
 
@@ -150,7 +148,6 @@ public class ConnectClass extends AbstractTableModel {
     public void loadPrepStates() {
         try {
             deleteDay = connection.prepareStatement("delete from curseddays where days = ?");
-            addDay = connection.prepareStatement("insert into curseddays values (?,?)");
             deleteAllDay = connection.prepareStatement("delete from curseddays where days = ?)");
             addDayWithComentary = connection.prepareStatement("insert into curseddays values (?,?)");
         } catch (SQLException ex) {
@@ -163,10 +160,14 @@ public class ConnectClass extends AbstractTableModel {
             addDayWithComentary.setInt(1, Integer.parseInt(Day));
             addDayWithComentary.setString(2, Comentary);
             addDayWithComentary.execute();
-            JOptionPane.showMessageDialog(null, "Day Added!", "Mensagem", 2);
+            JOptionPane.showMessageDialog(null, "Day Added!", "Mensagem", 1);
         } catch (SQLException ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Ops! Algo deu errado!", "Mensagem", 2);
+            if (ex.getErrorCode() == 1062) {
+                JOptionPane.showMessageDialog(null, "Está data já existe!", "Mensagem", 2);
+            } else {
+                JOptionPane.showMessageDialog(null, "Ops! Algo deu errado!", "Mensagem", 2);
+            }
         }
     }
 
@@ -177,18 +178,6 @@ public class ConnectClass extends AbstractTableModel {
             s = connection.prepareStatement(z);
             s.execute();
             JOptionPane.showMessageDialog(null, "Tudo foi deletado!", "Mensagem", 2);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Ops! Algo deu errado!", "Mensagem", 2);
-        }
-    }
-
-    public void addDay(String Day) {
-        try {
-            addDay.setInt(1, Integer.parseInt(Day));
-            addDay.setString(2, "NULL");
-            addDay.execute();
-            JOptionPane.showMessageDialog(null, "Day Added!", "Mensagem", 2);
         } catch (SQLException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Ops! Algo deu errado!", "Mensagem", 2);

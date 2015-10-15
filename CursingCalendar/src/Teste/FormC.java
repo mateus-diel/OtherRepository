@@ -2,6 +2,12 @@ package Teste;
 
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -14,7 +20,7 @@ import javax.swing.JOptionPane;
  */
 public class FormC extends javax.swing.JFrame {
 
-    ConnectClass data;
+    ConnectClass data,model;
 
     /**
      * Creates new form FormC
@@ -22,6 +28,7 @@ public class FormC extends javax.swing.JFrame {
     public FormC() {
         try {
             data = new ConnectClass();
+            model = new ConnectClass("Select * from curseddays");
         } catch (SQLException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Erro");
@@ -48,11 +55,13 @@ public class FormC extends javax.swing.JFrame {
         jbDeleteAll = new javax.swing.JButton();
         jlDay = new javax.swing.JLabel();
         jtfDay = new javax.swing.JTextField();
-        jbShow = new javax.swing.JButton();
+        jbReload = new javax.swing.JButton();
         jbExit = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jtNumberOfDays = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -102,10 +111,10 @@ public class FormC extends javax.swing.JFrame {
 
         jlDay.setText("Day:");
 
-        jbShow.setText("Show");
-        jbShow.addActionListener(new java.awt.event.ActionListener() {
+        jbReload.setText("Reload");
+        jbReload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbShowActionPerformed(evt);
+                jbReloadActionPerformed(evt);
             }
         });
 
@@ -120,57 +129,66 @@ public class FormC extends javax.swing.JFrame {
 
         jLabel2.setText("days stored");
 
+        jTable1.setModel(model);
+        jScrollPane2.setViewportView(jTable1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jlDay)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jtfDay, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jbAddDay)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jbDeleteDay)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
-                        .addComponent(jbShow)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jbDeleteAll)
-                        .addGap(18, 18, 18)
-                        .addComponent(jbExit)))
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jtNumberOfDays, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addGap(231, 231, 231))
+                        .addComponent(jbAddDay)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jbDeleteDay)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jbReload))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jbDeleteAll)
+                            .addGap(18, 18, 18)
+                            .addComponent(jbExit)
+                            .addGap(18, 18, 18)
+                            .addComponent(jLabel1)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jtNumberOfDays, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabel2))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jbAddDay)
-                    .addComponent(jbDeleteDay)
-                    .addComponent(jbDeleteAll)
-                    .addComponent(jlDay)
-                    .addComponent(jtfDay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jbShow)
-                    .addComponent(jbExit))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jtNumberOfDays, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jbDeleteDay)
+                            .addComponent(jlDay)
+                            .addComponent(jtfDay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jbReload)
+                            .addComponent(jbAddDay))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jtNumberOfDays, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2)
+                            .addComponent(jbDeleteAll)
+                            .addComponent(jbExit))))
                 .addContainerGap())
         );
 
@@ -179,19 +197,42 @@ public class FormC extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbAddDayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddDayActionPerformed
-        if (jtComentArea.getText().length() == 0 && jtfDay.getText().length() != 0) {
-            data.addDay(jtfDay.getText());
+        if (jtComentArea.getText().length() == 0 && jtfDay.getText().length()!=0 ) {
+            data.addDayComentary(jtfDay.getText(), getMonthData());
             jtfDay.setText("");
             jtNumberOfDays.setText(data.numberOfDays());
-        } else if (jtComentArea.getText().length() != 0 && jtfDay.getText().length() != 0) {
-            data.addDayComentary(jtfDay.getText(), jtComentArea.getText());
-            jtfDay.setText("");
+        } else if (jtComentArea.getText().length() != 0 && jtfDay.getText().length() == 0 ) {
+            data.addDayComentary(getDayData(), getMonthData() + " " + jtComentArea.getText());
             jtComentArea.setText("");
+        }else if (jtComentArea.getText().length()==0 && jtfDay.getText().length() == 0){
+             data.addDayComentary(getDayData(), getMonthData());
+            jtNumberOfDays.setText(data.numberOfDays());                    
         } else {
             jtNumberOfDays.setText(data.numberOfDays());
-            JOptionPane.showMessageDialog(null, "Please, insert a day!", "Mensagem", 2);
+            JOptionPane.showMessageDialog(null, "Algo deu errado!", "Mensagem", 1);
+        }
+        try{
+        model.setQuery("Select * from curseddays");
+        }catch (Exception ex){
+            ex.printStackTrace();
         }
     }//GEN-LAST:event_jbAddDayActionPerformed
+
+    public String getDayData() {
+        Locale locale = new Locale("pt", "BR");
+        GregorianCalendar calendar = new GregorianCalendar();
+        SimpleDateFormat formatador = new SimpleDateFormat("dd' de 'MMMMM' de 'yyyy' - 'HH':'mm'h'", locale);
+        String[] doc = formatador.format(calendar.getTime()).split(" ");
+        return doc[0];
+    }
+    
+    public String getMonthData(){
+        Locale locale = new Locale("pt", "BR");
+        GregorianCalendar calendar = new GregorianCalendar();
+        SimpleDateFormat formatador = new SimpleDateFormat("dd' de 'MMMMM' de 'yyyy' - 'HH':'mm'h'", locale);
+        String[] doc = formatador.format(calendar.getTime()).split(" ");
+        return doc[2];
+    }
 
     private void jbDeleteDayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbDeleteDayActionPerformed
         if (jtfDay.getText().length() != 0) {
@@ -200,6 +241,11 @@ public class FormC extends javax.swing.JFrame {
             jtNumberOfDays.setText(data.numberOfDays());
         } else {
             JOptionPane.showMessageDialog(null, "Please, insert a day!", "Mensagem", 2);
+        }
+        try{
+        model.setQuery("Select * from curseddays");
+        }catch (Exception ex){
+            ex.printStackTrace();
         }
     }//GEN-LAST:event_jbDeleteDayActionPerformed
 
@@ -211,13 +257,20 @@ public class FormC extends javax.swing.JFrame {
             data.deleteAllDays();
             jtNumberOfDays.setText(data.numberOfDays());
         }
+        try{
+        model.setQuery("Select * from curseddays");
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
     }//GEN-LAST:event_jbDeleteAllActionPerformed
 
-    private void jbShowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbShowActionPerformed
-        ShowAll show = new ShowAll();
-        show.setVisible(true);
-        jtNumberOfDays.setText(data.numberOfDays());
-    }//GEN-LAST:event_jbShowActionPerformed
+    private void jbReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbReloadActionPerformed
+        try {
+            model.setQuery("Select * from curseddays");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_jbReloadActionPerformed
 
     private void jbExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbExitActionPerformed
         data.disconnectFromDatabase();
@@ -229,11 +282,13 @@ public class FormC extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
     private javax.swing.JButton jbAddDay;
     private javax.swing.JButton jbDeleteAll;
     private javax.swing.JButton jbDeleteDay;
     private javax.swing.JButton jbExit;
-    private javax.swing.JButton jbShow;
+    private javax.swing.JButton jbReload;
     private javax.swing.JLabel jlDay;
     private javax.swing.JTextArea jtComentArea;
     private javax.swing.JTextField jtNumberOfDays;
