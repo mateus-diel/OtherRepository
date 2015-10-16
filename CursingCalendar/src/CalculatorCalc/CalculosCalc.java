@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package teste;
+package CalculatorCalc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Robson Fernando Gomes
  */
-public class Calculos {
+public class CalculosCalc {
 
     public String calculadora(String expressao) {
         String resultado;

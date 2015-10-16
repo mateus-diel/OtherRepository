@@ -1,14 +1,11 @@
 package Teste;
 
+import CalculatorCalc.Calculadora;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
-import java.util.Date;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-import javax.swing.JFrame;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -37,6 +34,7 @@ public class FormC extends javax.swing.JFrame {
         initComponents();
         try {
             jtNumberOfDays.setText(data.numberOfDays());
+            jtfRS.setText(Integer.toString(Integer.parseInt(data.numberOfDays())*4));
             jtfDay.requestFocus();
             jTable1.getColumnModel().getColumn(0).setPreferredWidth(30);
             jTable1.getColumnModel().getColumn(1).setPreferredWidth(400);
@@ -71,6 +69,8 @@ public class FormC extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jtfRS = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -111,7 +111,7 @@ public class FormC extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jbDeleteAll.setText("Delete All Day");
+        jbDeleteAll.setText("Delete All");
         jbDeleteAll.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbDeleteAllActionPerformed(evt);
@@ -141,35 +141,41 @@ public class FormC extends javax.swing.JFrame {
         jTable1.setModel(model);
         jScrollPane2.setViewportView(jTable1);
 
+        jLabel3.setText("|   R$:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jlDay)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jtfDay, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jbAddDay)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jbDeleteDay)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jbReload))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(jbDeleteAll)
-                            .addGap(18, 18, 18)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jbExit)
-                            .addGap(18, 18, 18)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jLabel1)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jtNumberOfDays, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtNumberOfDays, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jLabel2))))
+                            .addComponent(jLabel2)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jtfRS, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jlDay)
+                        .addGap(7, 7, 7)
+                        .addComponent(jtfDay, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jbAddDay, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jbDeleteDay, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jbReload)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -180,24 +186,26 @@ public class FormC extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(0, 3, Short.MAX_VALUE)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jbDeleteDay)
                             .addComponent(jlDay)
                             .addComponent(jtfDay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jbReload)
                             .addComponent(jbAddDay))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(jtNumberOfDays, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2)
                             .addComponent(jbDeleteAll)
-                            .addComponent(jbExit))))
+                            .addComponent(jbExit)
+                            .addComponent(jtfRS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))))
                 .addContainerGap())
         );
 
@@ -214,20 +222,24 @@ public class FormC extends javax.swing.JFrame {
                     || z.contains("OUTUBRO") || z.contains("NOVEMBRO") || z.contains("DEZEMBRO")) {
                 data.addDayComentary(jtfDay.getText(), jtComentArea.getText());
                 jtNumberOfDays.setText(data.numberOfDays());
+                jtfRS.setText(Integer.toString(Integer.parseInt(data.numberOfDays())*4));
                 jtfDay.setText("");
             } else {
                 if (jtComentArea.getText().length() == 0 && jtfDay.getText().length() != 0) {
                     data.addDayComentary(jtfDay.getText(), getMonthData());
                     jtfDay.setText("");
                     jtNumberOfDays.setText(data.numberOfDays());
+                    jtfRS.setText(Integer.toString(Integer.parseInt(data.numberOfDays())*4));
                 } else if (jtComentArea.getText().length() != 0 && jtfDay.getText().length() == 0) {
                     data.addDayComentary(getDayData(), getMonthData() + " " + jtComentArea.getText());
                     jtComentArea.setText("");
                 } else if (jtComentArea.getText().length() == 0 && jtfDay.getText().length() == 0) {
                     data.addDayComentary(getDayData(), getMonthData());
                     jtNumberOfDays.setText(data.numberOfDays());
+                    jtfRS.setText(Integer.toString(Integer.parseInt(data.numberOfDays())*4));
                 } else {
                     jtNumberOfDays.setText(data.numberOfDays());
+                    jtfRS.setText(Integer.toString(Integer.parseInt(data.numberOfDays())*4));
                     JOptionPane.showMessageDialog(null, "Algo deu errado!", "Mensagem", 1);
                 }
             }
@@ -259,6 +271,7 @@ public class FormC extends javax.swing.JFrame {
             data.deleteDay(jtfDay.getText());
             jtfDay.setText("");
             jtNumberOfDays.setText(data.numberOfDays());
+            jtfRS.setText(Integer.toString(Integer.parseInt(data.numberOfDays())*4));
         } else {
             JOptionPane.showMessageDialog(null, "Please, insert a day!", "Mensagem", 2);
         }
@@ -277,6 +290,7 @@ public class FormC extends javax.swing.JFrame {
         if (reply == JOptionPane.YES_OPTION) {
             data.deleteAllDays();
             jtNumberOfDays.setText(data.numberOfDays());
+            jtfRS.setText(Integer.toString(Integer.parseInt(data.numberOfDays())*4));
         }
         try {
             model.setQuery("Select * from curseddays");
@@ -304,6 +318,7 @@ public class FormC extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -317,5 +332,6 @@ public class FormC extends javax.swing.JFrame {
     private javax.swing.JTextArea jtComentArea;
     private javax.swing.JTextField jtNumberOfDays;
     private javax.swing.JTextField jtfDay;
+    private javax.swing.JTextField jtfRS;
     // End of variables declaration//GEN-END:variables
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Teste;
+package CalculatorCalc;
 
 /**
  *
@@ -267,8 +267,8 @@ public class Calculadora extends javax.swing.JFrame {
     private void jbIgualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbIgualActionPerformed
         String valor = jtfTela.getText();
         //System.out.println(">>>"+valor);
-        teste.Calculos calculos = new teste.Calculos();
-        String resultado = calculos.calculadora(valor);
+        CalculosCalc calculoss = new CalculosCalc();
+        String resultado = calculoss.calculadora(valor);
         if (resultado.endsWith("0")) {
             jtfTela.setText((String) resultado.subSequence(0, resultado.indexOf(".")));
         } else {

@@ -144,7 +144,7 @@ public class ConnectClass extends AbstractTableModel {
         }
         return "";
     }
-
+    
     public void loadPrepStates() {
         try {
             deleteDay = connection.prepareStatement("delete from curseddays where days = ?");
