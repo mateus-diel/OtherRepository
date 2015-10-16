@@ -1,6 +1,7 @@
 package Forms;
 
 import Data.ModelTable;
+import Log.PrintLog;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 
@@ -314,6 +315,7 @@ public class updateProduto extends javax.swing.JFrame {
      */
     private void jbAtualizarNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAtualizarNomeActionPerformed
         update.updateProdutoNome(jtfCodNome.getText(), jtfNewNome.getText());
+        PrintLog.gravaLog("Usuário "+queryForm.getUser()+" atualizou o nome de um produto");
     }//GEN-LAST:event_jbAtualizarNomeActionPerformed
 
     /**
@@ -324,6 +326,7 @@ public class updateProduto extends javax.swing.JFrame {
      */
     private void jbAtualizarPriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAtualizarPriceActionPerformed
         update.updateProdutoPrice(jtfCodPreço.getText(), jtfNewPrice.getText());
+        PrintLog.gravaLog("Usuário "+queryForm.getUser()+" atualizou o preço de um produto");
     }//GEN-LAST:event_jbAtualizarPriceActionPerformed
 
     /**
@@ -334,6 +337,7 @@ public class updateProduto extends javax.swing.JFrame {
      */
     private void InserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InserirActionPerformed
         update.inserirProduto(jtfNewKeyProduto.getText(), jtfNewPriceNewProduto.getText(), jtfNewNameNewProduto.getText());
+        PrintLog.gravaLog("Usuário "+queryForm.getUser()+" inseriu um novo produto");
     }//GEN-LAST:event_InserirActionPerformed
 
     /**
@@ -349,6 +353,7 @@ public class updateProduto extends javax.swing.JFrame {
         int reply = JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION);
         if (reply == JOptionPane.YES_OPTION) {
             update.excluirProduto(cd);
+            PrintLog.gravaLog("Usuário "+queryForm.getUser()+" excluiu um produto");
         }
     }//GEN-LAST:event_jbExcluirActionPerformed
 

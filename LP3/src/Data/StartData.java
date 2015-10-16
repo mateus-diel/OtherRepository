@@ -1,6 +1,7 @@
 package Data;
 
 import Forms.queryForm;
+import Log.PrintLog;
 import java.awt.Dimension;
 import static java.lang.Thread.sleep;
 import javax.swing.ImageIcon;
@@ -36,7 +37,7 @@ public class StartData extends JWindow {
      * @param login
      * @param pw
      */
-    public StartData(final String login, final String pw) {
+    public StartData(final String user, final String login, final String pw) {
         absoluto = new AbsoluteLayout();
         absimage = new AbsoluteConstraints(0, 0);
         absbarra = new AbsoluteConstraints(0, 115);
@@ -59,16 +60,18 @@ public class StartData extends JWindow {
                         sleep(30);
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
+                        PrintLog.gravarArquivo(ex);
                     }
                 }
                 queryForm start;
                 try {
-                    start = new queryForm(login, pw);
+                    start = new queryForm(user, login, pw);
                     start.setVisible(true);
                     setVisi();
                 } catch (Exception ex) {
                     setVisi();
                     ex.printStackTrace();
+                    PrintLog.gravarArquivo(ex);
                 }
             }
         }.start();

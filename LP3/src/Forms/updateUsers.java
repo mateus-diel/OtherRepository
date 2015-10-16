@@ -6,6 +6,7 @@
 package Forms;
 
 import Data.ModelTable;
+import Log.PrintLog;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
@@ -233,6 +234,7 @@ public class updateUsers extends javax.swing.JFrame {
         upUser.inserirUser(jtfNewCPF.getText(), jtfNewLogin.getText(), jtfNewPassword.getText());
         jtfExcluirCPF.setText("");
         jtfExcluirLogin.setText("");
+        PrintLog.gravaLog("Usuário "+queryForm.getUser()+" inseriu um novo usuário");
         try {
             upUser.setQuery("select * from usuarios");
         } catch (IllegalStateException ex) {
@@ -254,6 +256,7 @@ public class updateUsers extends javax.swing.JFrame {
         jtfNewCPF.setText("");
         jtfNewLogin.setText("");
         jtfNewPassword.setText("");
+        PrintLog.gravaLog("Usuário "+queryForm.getUser()+" excluiu um usuário");
         try {
             upUser.setQuery("select * from usuarios");
         } catch (IllegalStateException ex) {

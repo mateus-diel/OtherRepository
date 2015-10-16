@@ -1,14 +1,16 @@
 package Forms;
 
 import Data.ModelTable;
+import Log.PrintLog;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.table.TableModel;
 
 /**
- * Este form tem como objetivo proporcionar a interação entre as funções diponiveis
- * no form para realizar tarefas conjuntas ao banco de dados
+ * Este form tem como objetivo proporcionar a interação entre as funções
+ * diponiveis no form para realizar tarefas conjuntas ao banco de dados
+ *
  * @author Mateus
  */
 public class queryForm extends javax.swing.JFrame {
@@ -16,6 +18,7 @@ public class queryForm extends javax.swing.JFrame {
     static final String url = "jdbc:mysql://localhost/lp";
     String login;
     String pw;
+    static String user;
     ModelTable table;
     int line = 0;
     String full = "";
@@ -27,21 +30,23 @@ public class queryForm extends javax.swing.JFrame {
     String seis = "";
 
     /**
-     * Creates new form queryForm
-     * Cria novo objeto da classe ModelTable para que
+     * Creates new form queryForm Cria novo objeto da classe ModelTable para que
      * seja criado o modelo para a tabela existente neste form. Recebe o login e
      * senha da SatrtData e passa ao ModelTable
      *
      * @param login
      * @param pw
      */
-    public queryForm(String login, String pw) {
+    public queryForm(String user, String login, String pw) {
         try {
             this.table = new ModelTable(url, login, pw, "select * from cliente");
             this.login = login;
             this.pw = pw;
+            this.user = user;
+            PrintLog.setIsActive(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
             JOptionPane.showMessageDialog(null, "Não foi possivel estabelecer conexão \ncom o banco de dados", "Message", 2);
             System.exit(0);
         }
@@ -101,6 +106,7 @@ public class queryForm extends javax.swing.JFrame {
         jtfCodCli = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jmiLogout = new javax.swing.JMenuItem();
         jmiExit = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jmiCliente = new javax.swing.JMenuItem();
@@ -111,6 +117,7 @@ public class queryForm extends javax.swing.JFrame {
         jMenu3 = new javax.swing.JMenu();
         jmiSobre = new javax.swing.JMenuItem();
         jmiSuporte = new javax.swing.JMenuItem();
+        jrbmiLog = new javax.swing.JRadioButtonMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Main");
@@ -330,31 +337,31 @@ public class queryForm extends javax.swing.JFrame {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(20, Short.MAX_VALUE)
-                .addComponent(jbAtualizarPelaTabela, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21))
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(11, 11, 11)
-                .addComponent(jbUpdateProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jbUpdateCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jbUpdateVendedores, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jbUpdateUsers, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jbUpdateProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jbUpdateUsers, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
+                        .addComponent(jbUpdateCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jbUpdateVendedores, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jbAtualizarPelaTabela, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jbUpdateVendedores, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
-                        .addComponent(jbUpdateUsers, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
-                        .addComponent(jbUpdateProduto, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE))
-                    .addComponent(jbUpdateCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jbUpdateProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jbUpdateCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jbUpdateVendedores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jbUpdateUsers, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jbAtualizarPelaTabela)
                 .addGap(11, 11, 11))
@@ -503,6 +510,16 @@ public class queryForm extends javax.swing.JFrame {
 
         jMenu1.setText("Arquivo");
 
+        jmiLogout.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, java.awt.event.InputEvent.SHIFT_MASK));
+        jmiLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/user-logout.png"))); // NOI18N
+        jmiLogout.setText("Encerrar sessão");
+        jmiLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmiLogoutActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jmiLogout);
+
         jmiExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0));
         jmiExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/exit.png"))); // NOI18N
         jmiExit.setText("Exit");
@@ -590,6 +607,15 @@ public class queryForm extends javax.swing.JFrame {
         });
         jMenu3.add(jmiSuporte);
 
+        jrbmiLog.setSelected(true);
+        jrbmiLog.setText("Log");
+        jrbmiLog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jrbmiLogActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jrbmiLog);
+
         jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);
@@ -642,8 +668,23 @@ public class queryForm extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    public static String getUser() {
+        return user;
+    }
+
+    
+    public String forLog(String login, String identifier) {
+        try {
+            return "Usuário " + login + " consultou " + identifier;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
+        }
+        return "";
+    }
+
     /**
-     * Consulta o vendedor pelo nome e deixa os outros campos em braco
+     * Consulta o vendedor pelo nome e deixa os outros campos em branco
      */
     private void jbConsulVendedorNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbConsulVendedorNameActionPerformed
         try {
@@ -652,8 +693,10 @@ public class queryForm extends javax.swing.JFrame {
             jtfProdName.setText("");
             jtfNameCli.setText("");
             jtfCodCli.setText("");
+            PrintLog.gravaLog(forLog(this.user, "vendedor atráves do nome"));
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }//GEN-LAST:event_jbConsulVendedorNameActionPerformed
 
@@ -669,9 +712,11 @@ public class queryForm extends javax.swing.JFrame {
         populate();
         try {
             this.table.setQuery(text);
+            PrintLog.gravaLog(forLog(this.user, "através de query"));
         } catch (com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Ops! Algodeu errado\nVerifique a sintaxe por favor!", "Message", 2);
+            PrintLog.gravarArquivo(ex);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -689,8 +734,10 @@ public class queryForm extends javax.swing.JFrame {
             jtfProdName.setText("");
             jtfVendName.setText("");
             jtfConsulVendedorCod.setText("");
+            PrintLog.gravaLog(forLog(this.login, "clientes atráves do nome"));
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }//GEN-LAST:event_jbNameCliActionPerformed
 
@@ -706,9 +753,11 @@ public class queryForm extends javax.swing.JFrame {
             jtfProdName.setText("");
             jtfVendName.setText("");
             jtfConsulVendedorCod.setText("");
+            PrintLog.gravaLog(forLog(this.login, "clientes atráves do codigo"));
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Ops! Algo deu errado", "Message", 2);
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }//GEN-LAST:event_jbCodCliActionPerformed
 
@@ -724,8 +773,10 @@ public class queryForm extends javax.swing.JFrame {
             jtfConsulVendedorCod.setText("");
             jtfCodCli.setText("");
             jtfConsulVendedorCod.setText("");
+            PrintLog.gravaLog(forLog(this.login, "produtos atráves do nome"));
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }//GEN-LAST:event_jbConsultProdNameActionPerformed
 
@@ -735,7 +786,7 @@ public class queryForm extends javax.swing.JFrame {
     private void populate() {
         TableModel mod = jtUltimasConsultas.getModel();
         try {
-            full = jtUltimasConsultas.getValueAt(6, 0).toString();
+            full = jtUltimasConsultas.getValueAt(5, 0).toString();
         } catch (Exception ex) {
         }
         if (full.length() != 0) {
@@ -771,9 +822,11 @@ public class queryForm extends javax.swing.JFrame {
             jtfProdName.setText("");
             jtfNameCli.setText("");
             jtfCodCli.setText("");
+            PrintLog.gravaLog(forLog(this.login, "vendedor atráves do codigo"));
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Ops! Algo deu errado", "Message", 2);
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }//GEN-LAST:event_jbConsulVendedorCodActionPerformed
 
@@ -789,9 +842,11 @@ public class queryForm extends javax.swing.JFrame {
             jtfConsulVendedorCod.setText("");
             jtfCodCli.setText("");
             jtfConsulVendedorCod.setText("");
+            PrintLog.gravaLog(forLog(this.login, "produtos atráves do codigo"));
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Ops! Algo deu errado", "Message", 2);
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }//GEN-LAST:event_jbConsultProdCodActionPerformed
 
@@ -949,6 +1004,7 @@ public class queryForm extends javax.swing.JFrame {
      */
     private void jbOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbOKActionPerformed
         table.showNF(jtfNumeroNF.getText());
+        PrintLog.gravaLog(forLog(this.login, "uma nota fiscal"));
     }//GEN-LAST:event_jbOKActionPerformed
 
     /**
@@ -975,6 +1031,7 @@ public class queryForm extends javax.swing.JFrame {
         if (reply == JOptionPane.YES_OPTION) {
             updateFromTableList updateData = new updateFromTableList(login, pw);
             updateData.setVisible(true);
+            PrintLog.gravaLog("Usuário "+this.user+" abriu a tabela atualizável");
         }
     }//GEN-LAST:event_jbAtualizarPelaTabelaActionPerformed
 
@@ -990,9 +1047,11 @@ public class queryForm extends javax.swing.JFrame {
         } catch (SQLException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Ops! Algo deu errado\nNão foi possivel criar alguns prepared statements", "Message", 2);
+            PrintLog.gravarArquivo(ex);
         }
         updateClienteForm cliente = new updateClienteForm(table);
         cliente.setVisible(true);
+        PrintLog.gravaLog("Usuário "+this.user+" abriu a janela de clientes");
     }//GEN-LAST:event_jbUpdateClienteActionPerformed
 
     /**
@@ -1007,9 +1066,11 @@ public class queryForm extends javax.swing.JFrame {
         } catch (SQLException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Ops! Algo deu errado \nNão foi possivel criar alguns prepared statements", "Message", 2);
+            PrintLog.gravarArquivo(ex);
         }
         updateVendedor vendedor = new updateVendedor(table);
         vendedor.setVisible(true);
+        PrintLog.gravaLog("Usuário "+this.user+" abriu a janela de vendedors");
     }//GEN-LAST:event_jbUpdateVendedoresActionPerformed
 
     /**
@@ -1024,9 +1085,11 @@ public class queryForm extends javax.swing.JFrame {
         } catch (SQLException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Ops! Algo deu errado \nNão foi possivel criar alguns prepared statements", "Message", 2);
+            PrintLog.gravarArquivo(ex);
         }
         updateProduto produto = new updateProduto(table);
         produto.setVisible(true);
+        PrintLog.gravaLog("Usuário "+this.user+" abriu a janela de produtos");
     }//GEN-LAST:event_jbUpdateProdutoActionPerformed
 
     /**
@@ -1036,7 +1099,28 @@ public class queryForm extends javax.swing.JFrame {
      */
     private void jbUpdateUsersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbUpdateUsersActionPerformed
         jmiUsersActionPerformed(evt);
+        PrintLog.gravaLog("Usuário "+this.user+" abriu a janela de usuários");
     }//GEN-LAST:event_jbUpdateUsersActionPerformed
+
+    private void jrbmiLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jrbmiLogActionPerformed
+        /**
+         * if-else. If, no momento em que é pressionado se ficar ativo entao vai
+         * setar o isActive da classe LogErros como true. Else, no momento em
+         * que o botão é pressionado se ficar desativado então vai setar o
+         * isActive como false.
+         */
+        if (jrbmiLog.isSelected() == true) {
+            PrintLog.setIsActive(true);
+        } else {
+            PrintLog.setIsActive(false);
+        }
+    }//GEN-LAST:event_jrbmiLogActionPerformed
+
+    private void jmiLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmiLogoutActionPerformed
+      this.dispose();
+       LoginForm lo = new LoginForm();
+       lo.setVisible(true);
+    }//GEN-LAST:event_jmiLogoutActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
@@ -1076,12 +1160,14 @@ public class queryForm extends javax.swing.JFrame {
     private javax.swing.JMenuItem jmiCliente;
     private javax.swing.JMenuItem jmiEditaInTable;
     private javax.swing.JMenuItem jmiExit;
+    private javax.swing.JMenuItem jmiLogout;
     private javax.swing.JMenuItem jmiProdutos;
     private javax.swing.JMenuItem jmiSobre;
     private javax.swing.JMenuItem jmiSuporte;
     private javax.swing.JMenuItem jmiUsers;
     private javax.swing.JMenuItem jmiVendedores;
     private javax.swing.JPanel jpConsultVendedor;
+    private javax.swing.JRadioButtonMenuItem jrbmiLog;
     private javax.swing.JTable jtUltimasConsultas;
     private javax.swing.JTextArea jtaQuery;
     private javax.swing.JTextField jtfCodCli;

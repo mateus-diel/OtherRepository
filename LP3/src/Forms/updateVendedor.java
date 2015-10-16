@@ -1,6 +1,7 @@
 package Forms;
 
 import Data.ModelTable;
+import Log.PrintLog;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 
@@ -387,6 +388,7 @@ public class updateVendedor extends javax.swing.JFrame {
      */
     private void jbAtuzalizarNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAtuzalizarNomeActionPerformed
         update.updateVendedorNome(jtfCodNome.getText(), jtfNovoNome.getText());
+        PrintLog.gravaLog("Usuário "+queryForm.getUser()+" atualizou o nome de um vendedor");
     }//GEN-LAST:event_jbAtuzalizarNomeActionPerformed
 
     /**
@@ -397,6 +399,7 @@ public class updateVendedor extends javax.swing.JFrame {
      */
     private void jbAtualizarTelefoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAtualizarTelefoneActionPerformed
         update.updateVendedorTelefone(jtfTelefoneCod.getText(), jtfTelefone.getText());
+        PrintLog.gravaLog("Usuário "+queryForm.getUser()+" atualizou o telefone de um vendedor");
     }//GEN-LAST:event_jbAtualizarTelefoneActionPerformed
 
     /**
@@ -407,6 +410,7 @@ public class updateVendedor extends javax.swing.JFrame {
      */
     private void jbAtualizarSalarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAtualizarSalarioActionPerformed
         update.updateVendedorSalario(jtfSalarioCod.getText(), jtfSalario.getText());
+        PrintLog.gravaLog("Usuário "+queryForm.getUser()+" atualizou o salário de um vendedor");
     }//GEN-LAST:event_jbAtualizarSalarioActionPerformed
 
     /**
@@ -416,6 +420,7 @@ public class updateVendedor extends javax.swing.JFrame {
      */
     private void jbInserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbInserirActionPerformed
         update.insertVendedor(jtfNewNomeVendedor.getText(), jtfNewTelefone.getText(), jtfNewSalario.getText(), jtfNewVendedorCOD.getText());
+        PrintLog.gravaLog("Usuário "+queryForm.getUser()+" inseriu um novo vendedor");
     }//GEN-LAST:event_jbInserirActionPerformed
 
     /**
@@ -430,6 +435,7 @@ public class updateVendedor extends javax.swing.JFrame {
         int reply = JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION);
         if (reply == JOptionPane.YES_OPTION) {
             update.excluirVendedor(cd);
+            PrintLog.gravaLog("Usuário "+queryForm.getUser()+" excluiu um vendedor");
         }
     }//GEN-LAST:event_jbExcluirActionPerformed
 

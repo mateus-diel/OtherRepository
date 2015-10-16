@@ -1,5 +1,6 @@
 package Data;
 
+import Log.PrintLog;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -46,6 +47,7 @@ public class ModelTableUpgradeable extends AbstractTableModel {
                 return Class.forName(className);
             } catch (Exception ex) {
                 ex.printStackTrace();
+                PrintLog.gravarArquivo(ex);
             }
         }
         return Object.class;
@@ -60,6 +62,7 @@ public class ModelTableUpgradeable extends AbstractTableModel {
                 return metaData.getColumnCount();
             } catch (Exception ex) {
                 ex.printStackTrace();
+                PrintLog.gravarArquivo(ex);
             }
         }
         return 0;
@@ -74,6 +77,7 @@ public class ModelTableUpgradeable extends AbstractTableModel {
                 return metaData.getColumnName(column + 1);
             } catch (Exception ex) {
                 ex.printStackTrace();
+                PrintLog.gravarArquivo(ex);
             }
         }
         return "";
@@ -94,6 +98,7 @@ public class ModelTableUpgradeable extends AbstractTableModel {
                 return resultSet.getObject(column + 1);
             } catch (Exception ex) {
                 ex.printStackTrace();
+                PrintLog.gravarArquivo(ex);
             }
         }
         return "";
@@ -113,6 +118,7 @@ public class ModelTableUpgradeable extends AbstractTableModel {
             resultSet.updateRow();
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
 
         fireTableCellUpdated(row, col);
@@ -146,6 +152,7 @@ public class ModelTableUpgradeable extends AbstractTableModel {
                 connection.close();
             } catch (SQLException ex) {
                 ex.printStackTrace();
+                PrintLog.gravarArquivo(ex);
             } finally {
                 connectedToDatabase = false;
             }

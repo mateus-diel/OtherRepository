@@ -1,6 +1,7 @@
 package Forms;
 
 import Data.ModelTable;
+import Log.PrintLog;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 
@@ -476,6 +477,7 @@ public class updateClienteForm extends javax.swing.JFrame {
      */
     private void jbAtuzalizarNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAtuzalizarNomeActionPerformed
         update.updateClienteNome(jtfNome.getText(), jtfCPF.getText());
+        PrintLog.gravaLog("Usuário "+queryForm.getUser()+" atualizou o nome de um cliente");
     }//GEN-LAST:event_jbAtuzalizarNomeActionPerformed
 
     /**
@@ -485,6 +487,7 @@ public class updateClienteForm extends javax.swing.JFrame {
      */
     private void jbAtualizarRGActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAtualizarRGActionPerformed
         update.updateClienteRG(jtfRG.getText(), jtfCPFRG.getText());
+        PrintLog.gravaLog("Usuário "+queryForm.getUser()+" atualizou o rg de um cliente");
     }//GEN-LAST:event_jbAtualizarRGActionPerformed
 
     /**
@@ -495,6 +498,7 @@ public class updateClienteForm extends javax.swing.JFrame {
      */
     private void jbAtualizarTelefoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAtualizarTelefoneActionPerformed
         update.updateClienteTelefone(jtfTelefone.getText(), jtfCPFTelefone.getText());
+        PrintLog.gravaLog("Usuário "+queryForm.getUser()+" atualizou o telefone de um cliente");
     }//GEN-LAST:event_jbAtualizarTelefoneActionPerformed
 
     /**
@@ -505,6 +509,7 @@ public class updateClienteForm extends javax.swing.JFrame {
      */
     private void jbInserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbInserirActionPerformed
         update.inserirCliente(jtfCPFCliInserir.getText(), jtfRGClieInserir.getText(), jtfTelefoneCliInserir.getText(), jtfNomeCliInserir.getText());
+        PrintLog.gravaLog("Usuário "+queryForm.getUser()+" inseriu um cliente");
     }//GEN-LAST:event_jbInserirActionPerformed
 
     /**
@@ -519,6 +524,7 @@ public class updateClienteForm extends javax.swing.JFrame {
         int reply = JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION);
         if (reply == JOptionPane.YES_OPTION) {
             update.excluirCliente(jtfExcluirCPF.getText(), jtfExcluirRG.getText());
+            PrintLog.gravaLog("Usuário "+queryForm.getUser()+" excluiu um cliente");
         }
     }//GEN-LAST:event_jbExcluirActionPerformed
 
@@ -529,6 +535,7 @@ public class updateClienteForm extends javax.swing.JFrame {
      */
     private void jbAtualizarCPFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAtualizarCPFActionPerformed
         update.updateCPFCliente(jtfRGCPF.getText(), jtfNomeCPF.getText(), jtfCPFCPF.getText());
+        PrintLog.gravaLog("Usuário "+queryForm.getUser()+" atualizou o cpf de um cliente");
     }//GEN-LAST:event_jbAtualizarCPFActionPerformed
 
     private void jtfCPFKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfCPFKeyPressed

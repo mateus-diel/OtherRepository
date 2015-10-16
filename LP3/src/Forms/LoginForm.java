@@ -2,6 +2,7 @@ package Forms;
 
 import Data.ModelTable;
 import Data.StartData;
+import Log.PrintLog;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -226,7 +227,8 @@ public class LoginForm extends javax.swing.JDialog {
                 password = new String(jpfPassword.getPassword());
                 if (password.equals(pw)) {
                     this.dispose();
-                    StartData start = new StartData(loginSql, PwSQL);
+                    StartData start = new StartData(jtfLogin.getText(),loginSql, PwSQL);
+                    PrintLog.gravaLog("Usuário "+jtfLogin.getText()+" logou-se no sistema");
                 } else {
                     JOptionPane.showMessageDialog(null, "Password incorreta", "Message", 2);
                 }
@@ -238,6 +240,7 @@ public class LoginForm extends javax.swing.JDialog {
                     JOptionPane.showMessageDialog(null, "Login não localizado, verifique o login!", "Mensagem", 1);
                 }
                 ex.printStackTrace();
+                PrintLog.gravarArquivo(ex);
             }
         } else {
             JOptionPane.showMessageDialog(null, "Por favor, insira os dados do servidor", "Mensagem", 2);
@@ -278,6 +281,7 @@ public class LoginForm extends javax.swing.JDialog {
                 }
             } catch (SQLException ex) {
                 ex.printStackTrace();
+                PrintLog.gravarArquivo(ex);
             }
         } else {
             JOptionPane.showMessageDialog(null, "Por favor, insira os dados do servidor", "Mensagem", 2);

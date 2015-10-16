@@ -1,5 +1,6 @@
 package Data;
 
+import Log.PrintLog;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -91,6 +92,7 @@ public class ModelTable extends AbstractTableModel {
                 return Class.forName(className);
             } catch (Exception ex) {
                 ex.printStackTrace();
+                PrintLog.gravarArquivo(ex);
             }
         }
         return Object.class;
@@ -105,6 +107,7 @@ public class ModelTable extends AbstractTableModel {
                 return metaData.getColumnCount();
             } catch (Exception ex) {
                 ex.printStackTrace();
+                PrintLog.gravarArquivo(ex);
             }
         }
         return 0;
@@ -119,6 +122,7 @@ public class ModelTable extends AbstractTableModel {
                 return metaData.getColumnName(column + 1);
             } catch (Exception ex) {
                 ex.printStackTrace();
+                PrintLog.gravarArquivo(ex);
             }
         }
         return "";
@@ -139,6 +143,7 @@ public class ModelTable extends AbstractTableModel {
                 return resultSet.getObject(column + 1);
             } catch (Exception ex) {
                 ex.printStackTrace();
+                PrintLog.gravarArquivo(ex);
             }
         }
         return "";
@@ -155,6 +160,7 @@ public class ModelTable extends AbstractTableModel {
                 connection.close();
             } catch (SQLException ex) {
                 ex.printStackTrace();
+                PrintLog.gravarArquivo(ex);
             } finally {
                 connectedToDatabase = false;
             }
@@ -306,6 +312,7 @@ public class ModelTable extends AbstractTableModel {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Ops! Algo deu errado \n Verifique o campos e tente novamente", "Message", 2);
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }
 
@@ -354,6 +361,7 @@ public class ModelTable extends AbstractTableModel {
             return resultSet.getRow();
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
         return 0;
     }
@@ -434,13 +442,16 @@ public class ModelTable extends AbstractTableModel {
                 connection.rollback();
             } catch (SQLException ex1) {
                 ex1.printStackTrace();
+                PrintLog.gravarArquivo(ex1);
             }
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
         try {
             connection.setAutoCommit(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }
 
@@ -465,13 +476,16 @@ public class ModelTable extends AbstractTableModel {
                 connection.rollback();
             } catch (SQLException ex1) {
                 ex1.printStackTrace();
+                PrintLog.gravarArquivo(ex1);
             }
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
         try {
             connection.setAutoCommit(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }
 
@@ -495,6 +509,7 @@ public class ModelTable extends AbstractTableModel {
             }
         } catch (SQLException exception) {
             exception.printStackTrace();
+            PrintLog.gravarArquivo(exception);
             if(login.length() !=0){
             try {
                 connection.setAutoCommit(false);
@@ -513,13 +528,16 @@ public class ModelTable extends AbstractTableModel {
                     connection.rollback();
                 } catch (SQLException ex1) {
                     ex1.printStackTrace();
+                    PrintLog.gravarArquivo(ex1);
                 }
                 ex.printStackTrace();
+                PrintLog.gravarArquivo(ex);
             }
             try {
                 connection.setAutoCommit(true);
             } catch (SQLException ex) {
                 ex.printStackTrace();
+                PrintLog.gravarArquivo(ex);
             }
         }
         }
@@ -548,13 +566,16 @@ public class ModelTable extends AbstractTableModel {
                 connection.rollback();
             } catch (SQLException ex1) {
                 ex1.printStackTrace();
+                PrintLog.gravarArquivo(ex1);
             }
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
         try {
             connection.setAutoCommit(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }
 
@@ -577,13 +598,16 @@ public class ModelTable extends AbstractTableModel {
                 connection.rollback();
             } catch (SQLException ex1) {
                 ex1.printStackTrace();
+                PrintLog.gravarArquivo(ex1);
             }
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
         try {
             connection.setAutoCommit(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }
 
@@ -606,13 +630,16 @@ public class ModelTable extends AbstractTableModel {
                 connection.rollback();
             } catch (SQLException ex1) {
                 ex1.printStackTrace();
+                PrintLog.gravarArquivo(ex1);
             }
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
         try {
             connection.setAutoCommit(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }
 
@@ -645,13 +672,16 @@ public class ModelTable extends AbstractTableModel {
                 connection.rollback();
             } catch (SQLException ex1) {
                 ex1.printStackTrace();
+                PrintLog.gravarArquivo(ex1);
             }
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
         try {
             connection.setAutoCommit(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }
 
@@ -676,13 +706,16 @@ public class ModelTable extends AbstractTableModel {
                 connection.rollback();
             } catch (SQLException ex1) {
                 ex1.printStackTrace();
+                PrintLog.gravarArquivo(ex1);
             }
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
         try {
             connection.setAutoCommit(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }
 
@@ -707,13 +740,16 @@ public class ModelTable extends AbstractTableModel {
                 connection.rollback();
             } catch (SQLException ex1) {
                 ex1.printStackTrace();
+                PrintLog.gravarArquivo(ex1);
             }
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
         try {
             connection.setAutoCommit(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }
 
@@ -738,13 +774,16 @@ public class ModelTable extends AbstractTableModel {
                 connection.rollback();
             } catch (SQLException ex1) {
                 ex1.printStackTrace();
+                PrintLog.gravarArquivo(ex1);
             }
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
         try {
             connection.setAutoCommit(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }
 
@@ -775,13 +814,16 @@ public class ModelTable extends AbstractTableModel {
                 connection.rollback();
             } catch (SQLException ex1) {
                 ex1.printStackTrace();
+                PrintLog.gravarArquivo(ex1);
             }
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
         try {
             connection.setAutoCommit(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }
 
@@ -806,13 +848,16 @@ public class ModelTable extends AbstractTableModel {
                 connection.rollback();
             } catch (SQLException ex1) {
                 ex1.printStackTrace();
+                PrintLog.gravarArquivo(ex1);
             }
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
         try {
             connection.setAutoCommit(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }
 
@@ -841,13 +886,16 @@ public class ModelTable extends AbstractTableModel {
                 connection.rollback();
             } catch (SQLException ex1) {
                 ex1.printStackTrace();
+                PrintLog.gravarArquivo(ex1);
             }
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
         try {
             connection.setAutoCommit(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }
 
@@ -872,13 +920,16 @@ public class ModelTable extends AbstractTableModel {
                 connection.rollback();
             } catch (SQLException ex1) {
                 ex1.printStackTrace();
+                PrintLog.gravarArquivo(ex1);
             }
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
         try {
             connection.setAutoCommit(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }
 
@@ -903,13 +954,16 @@ public class ModelTable extends AbstractTableModel {
                 connection.rollback();
             } catch (SQLException ex1) {
                 ex1.printStackTrace();
+                PrintLog.gravarArquivo(ex1);
             }
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
         try {
             connection.setAutoCommit(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }
 
@@ -935,13 +989,16 @@ public class ModelTable extends AbstractTableModel {
                 connection.rollback();
             } catch (SQLException ex1) {
                 ex1.printStackTrace();
+                PrintLog.gravarArquivo(ex1);
             }
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
         try {
             connection.setAutoCommit(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }
 
@@ -977,13 +1034,16 @@ public class ModelTable extends AbstractTableModel {
                 connection.rollback();
             } catch (SQLException ex1) {
                 ex1.printStackTrace();
+                PrintLog.gravarArquivo(ex1);
             }
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
         try {
             connection.setAutoCommit(true);
         } catch (SQLException ex) {
             ex.printStackTrace();
+            PrintLog.gravarArquivo(ex);
         }
     }
 
