@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Produto>
+ <Id>12</Id>
+ <Nome>Computador</Nome>
+ <Valor>2000,00</Valor>
+ <Fornecedor>
+     <NomeFornecedor>IBM</NomeFornecedor>
+ </Fornecedor>
+</Produto>
